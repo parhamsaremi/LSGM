@@ -13,6 +13,9 @@ from torch.optim import Optimizer
 
 class EMA(Optimizer):
     def __init__(self, opt, ema_decay):
+        self.defaults = opt.defaults
+        self._optimizer_state_dict_pre_hooks = opt._optimizer_state_dict_pre_hooks
+        self._optimizer_state_dict_post_hooks = opt._optimizer_state_dict_post_hooks
         self.ema_decay = ema_decay
         self.apply_ema = self.ema_decay > 0.
         self.optimizer = opt

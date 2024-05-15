@@ -8,6 +8,7 @@
 """Code for getting the data loaders."""
 
 import torch
+import torch.utils
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
 from util.lmdb_datasets import LMDBDataset
@@ -17,7 +18,6 @@ import urllib
 from scipy.io import loadmat
 from torch.utils.data import Dataset
 from PIL import Image
-from torch._utils import _accumulate
 
 class Binarize(object):
     """ This class introduces a binarization transformation
@@ -215,7 +215,7 @@ def random_split_dataset(dataset, lengths, seed=0):
 
     indices = torch.randperm(sum(lengths), generator=g)
     return [torch.utils.data.Subset(dataset, indices[offset - length:offset])
-            for offset, length in zip(_accumulate(lengths), lengths)]
+            for offset, length in zip(torch.cumsum(lengths), lengths)] #changed _accumulate to cumsum which was removed from torch in this commit https://github.com/pytorch/pytorch/commit/1d5a9a1c1a5f47f461092345dc998800aecb7c72#
 
 
 def _data_transforms_cifar10():
