@@ -473,4 +473,9 @@ if __name__ == '__main__':
         # for debugging
         print('starting in debug mode')
         args.distributed = True
-        utils.init_processes(0, size, main, args)
+        rank = 0
+        args.local_rank = rank
+        global_rank = rank + args.node_rank * args.num_process_per_node
+        global_size = args.num_proc_node * args.num_process_per_node
+        args.global_rank = global_rank
+        utils.init_processes(global_rank, global_size, main, args)
